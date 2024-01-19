@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => '__root__',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'benmorel/apache-log-parser' => array(
+            'pretty_version' => '0.2.0',
+            'version' => '0.2.0.0',
+            'reference' => '9ba342b063488531ff82c06db8f9b97e4397013b',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../benmorel/apache-log-parser',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'dekor/php-array-table' => array(
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
+            'reference' => 'ca40b21ba84eee6a9658a33fc5f897d76baaf8e5',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../dekor/php-array-table',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);
