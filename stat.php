@@ -80,14 +80,14 @@ while (($line = fgets($log_handle)) !== false) {
 fclose($log_handle);
 
 $fields = [
-	'version',
-	'fullversion',
-//	'shortversion',
-//	'php',
-	'shortphp',
-	'multisite',
-	'locale',
-//	'ip',
+	'version',      // CP version from User Agent.
+	'fullversion',  // CP version from API endpoint.
+//	'shortversion', // CP version from User Agent, shortened to major.minor.
+//	'php',          // PHP version from the request.
+	'shortphp',     // PHP version from the request, shortened to major.minor.
+	'multisite',    // 0 for single, 1 for multisite.
+	'locale',       // Locale.
+//	'ip',           // IP address.
 ];
 
 $stats = [];
