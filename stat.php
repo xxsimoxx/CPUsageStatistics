@@ -22,19 +22,14 @@ if (!$log_handle) {
 	help('Can\'t read '.$log_file.'.');
 }
 
-$spammers_ip = [
-	'183.90.183.160',
-	'183.90.182.153',
-	'183.90.183.156',
-];
+$spammers_ip = [];
 
-$data = [];
-$end_time = strtotime('01/Jan/2000:00:00:00 +0000');
-$start_time   = strtotime('31/Dec/3000:23:59:59 +0000');
-$hosts = [];
-
-$log_format = '%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"'; //combined
-$log_parser = new Parser($log_format);
+$end_time    = strtotime('01/Jan/2000:00:00:00 +0000');
+$start_time  = strtotime('31/Dec/3000:23:59:59 +0000');
+$hosts       = [];
+$data        = [];
+$log_format  = '%h %l %u %t "%r" %>s %O "%{Referer}i" "%{User-Agent}i"'; //combined
+$log_parser  = new Parser($log_format);
 
 while (($line = fgets($log_handle)) !== false) {
 
@@ -57,7 +52,7 @@ while (($line = fgets($log_handle)) !== false) {
 
 	$data[$agent['site']] = [
 		'version'      => $agent['ver'],
-		'fullversion'  => $matches[1] ?? 'strange',
+		'fullversion'  => preg_replace('~\.[0-9]{8}$~', '', $matches[1] ?? 'strange'),
 		'shortversion' => majorminor($agent['ver']),
 		'php'          => $request['php'],
 		'shortphp'     => majorminor($request['php']),
@@ -80,32 +75,32 @@ while (($line = fgets($log_handle)) !== false) {
 fclose($log_handle);
 
 $fields = [
-	'version',      // CP version from User Agent.
-	'fullversion',  // CP version from API endpoint.
-//	'shortversion', // CP version from User Agent, shortened to major.minor.
-//	'php',          // PHP version from the request.
-	'shortphp',     // PHP version from the request, shortened to major.minor.
-	'multisite',    // 0 for single, 1 for multisite.
-	'locale',       // Locale.
-//	'ip',           // IP address.
+	'version'      => 'ClassicPress version',         // CP version from User Agent.
+	'fullversion'  => 'ClassicPress version (long)',  // CP version from API endpoint.
+	'shortversion' => 'ClassicPress version (short)', // CP version from User Agent, shortened to major.minor.
+	'php'          => 'PHP version',                  // PHP version from the request.
+	'shortphp'     => 'PHP version (short)',          // PHP version from the request, shortened to major.minor.
+	'multisite'    => 'Multisite (bool)',             // 0 for single, 1 for multisite.
+	'locale'       => 'Locale',                       // Locale.
+	'ip'           => 'IP address',                   // IP address.
 ];
 
 $stats = [];
 
 foreach ($data as $values) {
-	foreach ($fields as $field) {
-		if (!isset($stats[$field][$values[$field]])) {
-			$stats[$field][$values[$field]] = 0;
+	foreach ($fields as $field_key => $field) {
+		if (!isset($stats[$field_key][$values[$field_key]])) {
+			$stats[$field_key][$values[$field_key]] = 0;
 		}
-		$stats[$field][$values[$field]]++;
+		$stats[$field_key][$values[$field_key]]++;
 	}
 }
 
 echo 'From '.date('d/m/Y H:i', $start_time).' to '.date('d/m/Y H:i', $end_time).'.'."\n";
 echo '------------------------------------------'."\n\n";
 
-foreach ($fields as $field) {
-	render_data($stats, $field, $field);
+foreach ($fields as $field_key => $field) {
+	render_data($stats, $field_key, $field);
 }
 
 function render_data($stats, $label, $readable) {
