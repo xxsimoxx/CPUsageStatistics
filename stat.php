@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+(PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) && die('cli only');
+
 require_once 'vendor/autoload.php';
 
 use BenMorel\ApacheLogParser\Parser;
@@ -22,6 +24,7 @@ if (!$log_handle) {
 	help('Can\'t read '.$log_file.'.');
 }
 
+// Array of IPs excluded from the statistics.
 $spammers_ip = [];
 
 $end_time    = strtotime('01/Jan/2000:00:00:00 +0000');
@@ -89,9 +92,21 @@ $fields = [
 	'ip'           => 'IP address',                   // IP address.
 ];
 
+$test_sites = [
+	'c3c39623cffaad3cd0c5503ac2a36d1ee70adc1b' => 'educatorecinofilo.dog',
+	'059d7d19bba7932395057cfdae01a88d963baeab' => 'software.gieffeedizioni.it',
+];
+
 $stats = [];
 
-foreach ($data as $values) {
+foreach ($data as $key => $values) {
+	/*
+	// Used to check known sites.
+	if (array_key_exists($key, $test_sites)) {
+		echo $test_sites[$key]."\n";
+		var_dump($values);
+	}
+	*/
 	foreach ($fields as $field_key => $field) {
 		if (!isset($stats[$field_key][$values[$field_key]])) {
 			$stats[$field_key][$values[$field_key]] = 0;
