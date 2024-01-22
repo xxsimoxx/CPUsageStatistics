@@ -1,3 +1,5 @@
 .DS_Store
 logs.txt
 simo.log
+simo*
+api_access*
