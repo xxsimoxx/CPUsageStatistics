@@ -57,6 +57,13 @@ while (($line = fgets($log_handle)) !== false) {
 		continue;
 	}
 
+	/*
+	// Test a single IP.
+	if($parsed_line['remoteHostname']!=='91.238.164.172') {
+		continue;
+	}
+	*/
+
 	$data[$agent['site']] = [
 		'version'      => $agent['ver'],
 		'fullversion'  => preg_replace('~\.[0-9]{8}$~', '', $matches[1] ?? 'strange'),
@@ -81,6 +88,12 @@ while (($line = fgets($log_handle)) !== false) {
 
 fclose($log_handle);
 
+if(empty($data)) {
+	echo 'No valid data found.'."\n";
+	return;
+}
+
+
 $fields = [
 	'version'      => 'ClassicPress version',         // CP version from User Agent.
 	'fullversion'  => 'ClassicPress version (long)',  // CP version from API endpoint.
@@ -101,7 +114,7 @@ $stats = [];
 
 foreach ($data as $key => $values) {
 	/*
-	// Used to check known sites.
+	// Used to check known sites. See array above.
 	if (array_key_exists($key, $test_sites)) {
 		echo $test_sites[$key]."\n";
 		var_dump($values);
