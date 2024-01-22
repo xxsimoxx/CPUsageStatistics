@@ -129,7 +129,10 @@ foreach ($data as $key => $values) {
 }
 
 echo 'From '.date('d/m/Y H:i', $start_time).' to '.date('d/m/Y H:i', $end_time).'.'."\n";
+echo '------------------------------------------'."\n";
+echo count($data).' total installations.'."\n";
 echo '------------------------------------------'."\n\n";
+
 
 foreach ($fields as $field_key => $field) {
 	render_data($stats, $field_key, $field);
