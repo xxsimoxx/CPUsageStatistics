@@ -35,7 +35,7 @@ while (($line = fgets($log_handle)) !== false) {
 
 	$parsed_line = $log_parser->parse($line, true);
 
-	if (preg_match('~^GET (?:/v1)?/upgrade/(.*)\.json~', $parsed_line['firstRequestLine'], $matches) !== 1) {
+	if (preg_match('~^GET /v1/upgrade/(.*)\.json~', $parsed_line['firstRequestLine'], $matches) !== 1) {
 		continue; // Skip requests that are not for updates.
 	}
 
@@ -47,6 +47,10 @@ while (($line = fgets($log_handle)) !== false) {
 	parse_str($parsed_line['requestHeader:User-Agent'], $agent);
 
 	if (!isset($agent['site']) || !isset($agent['ver']) || !isset($request['php']) || !isset($request['multisite_enabled']) || !isset($request['locale'])) {
+		continue;
+	}
+
+	if (strlen($agent['site']) !== 40 || $agent['ver'] === '') {
 		continue;
 	}
 
@@ -78,7 +82,7 @@ $fields = [
 	'version'      => 'ClassicPress version',         // CP version from User Agent.
 	'fullversion'  => 'ClassicPress version (long)',  // CP version from API endpoint.
 	'shortversion' => 'ClassicPress version (short)', // CP version from User Agent, shortened to major.minor.
-	'php'          => 'PHP version',                  // PHP version from the request.
+//	'php'          => 'PHP version',                  // PHP version from the request.
 	'shortphp'     => 'PHP version (short)',          // PHP version from the request, shortened to major.minor.
 	'multisite'    => 'Multisite (bool)',             // 0 for single, 1 for multisite.
 	'locale'       => 'Locale',                       // Locale.
