@@ -14,7 +14,10 @@ if (!isset($argv[1])) {
 }
 
 $log_file = $argv[1];
-if (!is_readable($log_file)) {
+if ($log_file === '-') {
+	$log_file='php://stdin';
+}
+if (!is_readable($log_file) && $log_file!=='php://stdin') {
 	help('Can\'t access '.$log_file.'.');
 	exit;
 }
