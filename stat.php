@@ -1,25 +1,33 @@
 #!/usr/bin/env php
 <?php
 
-(PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) && die('cli only');
+if (PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) {
+	die('cli only');
+}
 
 require_once 'vendor/autoload.php';
 
 use BenMorel\ApacheLogParser\Parser;
 use dekor\ArrayToTextTable;
 
-if (!isset($argv[1])) {
+$opt_long = [
+	'only-total',
+	'fields:',
+];
+$options = getopt('', $opt_long, $rest_index);
+
+if (!isset($argv[$rest_index])) {
 	help('Please specify a file.');
-	exit;
+	return;
 }
 
-$log_file = $argv[1];
+$log_file = $argv[$rest_index];
 if ($log_file === '-') {
-	$log_file='php://stdin';
+	$log_file = 'php://stdin';
 }
-if (!is_readable($log_file) && $log_file!=='php://stdin') {
+if (!is_readable($log_file) && $log_file !== 'php://stdin') {
 	help('Can\'t access '.$log_file.'.');
-	exit;
+	return;
 }
 
 $log_handle = fopen($log_file, 'r');
@@ -91,11 +99,20 @@ while (($line = fgets($log_handle)) !== false) {
 
 fclose($log_handle);
 
-if(empty($data)) {
+if (array_key_exists('only-total', $options)) {
+	echo count($data) ?? 0;
+	return;
+}
+
+if (empty($data)) {
 	echo 'No valid data found.'."\n";
 	return;
 }
 
+echo 'From '.date('d/m/Y H:i', $start_time).' to '.date('d/m/Y H:i', $end_time).'.'."\n";
+echo '------------------------------------------'."\n";
+echo count($data).' total installations.'."\n";
+echo '------------------------------------------'."\n\n";
 
 $fields = [
 	'version'      => 'ClassicPress version',         // CP version from User Agent.
@@ -107,6 +124,12 @@ $fields = [
 	'locale'       => 'Locale',                       // Locale.
 	'ip'           => 'IP address',                   // IP address.
 ];
+
+if (!array_key_exists('fields', $options)) {
+	$conf_fields = array_keys($fields);
+} else {
+	$conf_fields = explode(',', $options['fields']);
+}
 
 $test_sites = [
 	'c3c39623cffaad3cd0c5503ac2a36d1ee70adc1b' => 'educatorecinofilo.dog',
@@ -131,13 +154,10 @@ foreach ($data as $key => $values) {
 	}
 }
 
-echo 'From '.date('d/m/Y H:i', $start_time).' to '.date('d/m/Y H:i', $end_time).'.'."\n";
-echo '------------------------------------------'."\n";
-echo count($data).' total installations.'."\n";
-echo '------------------------------------------'."\n\n";
-
-
 foreach ($fields as $field_key => $field) {
+	if (!in_array($field_key, $conf_fields)) {
+		continue;
+	}
 	render_data($stats, $field_key, $field);
 }
 
