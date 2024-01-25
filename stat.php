@@ -118,7 +118,7 @@ $fields = [
 	'version'      => 'ClassicPress version',         // CP version from User Agent.
 	'fullversion'  => 'ClassicPress version (long)',  // CP version from API endpoint.
 	'shortversion' => 'ClassicPress version (short)', // CP version from User Agent, shortened to major.minor.
-//	'php'          => 'PHP version',                  // PHP version from the request.
+	'php'          => 'PHP version',                  // PHP version from the request.
 	'shortphp'     => 'PHP version (short)',          // PHP version from the request, shortened to major.minor.
 	'multisite'    => 'Multisite (bool)',             // 0 for single, 1 for multisite.
 	'locale'       => 'Locale',                       // Locale.
@@ -184,5 +184,16 @@ function majorminor($version) {
 
 function help($message = '') {
 	echo $message."\n";
-	echo basename(__FILE__).' <log_file>'."\n";
+	echo basename(__FILE__).' [--only-total] [--fields=x,y,z] <log_file>'."\n";
+	echo ' --only-total   Print just the total number of installations.'."\n";
+	echo ' --fields=x,y   Only print selected fields (use commas to separate multiple values).'."\n";
+	echo '                Available fields:'."\n";
+	echo '                version:      CP version from User Agent.'."\n";
+	echo '                fullversion:  CP full version from API endpoint.'."\n";
+	echo '                shortversion: CP version from User Agent, shortened to major.minor.'."\n";
+	echo '                php:          PHP version from the request.'."\n";
+	echo '                shortphp:     PHP version from the request, shortened to major.minor.'."\n";
+	echo '                multisite:    0 for single, 1 for multisite.'."\n";
+	echo '                locale:       Locale.'."\n";
+	echo '                ip:           IP address.'."\n";
 }
