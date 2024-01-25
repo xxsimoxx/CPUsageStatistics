@@ -13,7 +13,7 @@ done;
 cat "/var/log/apache2/api_access.log.1" >&3;
 cat "/var/log/apache2/api_access.log" >&3;
 
-# Gzip logs
+# Process logs
 date=$(date '+%Y-%m-%d')
 cat <&4 | ./stat.php --fields=version,fullversion,shortphp,multisite,locale - >"stats_${date}.txt"
 
