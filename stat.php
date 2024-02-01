@@ -36,6 +36,7 @@ if (!$log_handle) {
 }
 
 // Array of IPs excluded from the statistics.
+//$spammers_ip = ['183.90.183.160','183.90.182.153','183.90.183.156'];
 $spammers_ip = [];
 
 $end_time    = strtotime('01/Jan/2000:00:00:00 +0000');
@@ -48,6 +49,10 @@ $log_parser  = new Parser($log_format);
 while (($line = fgets($log_handle)) !== false) {
 
 	$parsed_line = $log_parser->parse($line, true);
+
+	if ($parsed_line['status'] !== '200') {
+		continue;
+	}
 
 	if (preg_match('~^GET /v1/upgrade/(.*)\.json~', $parsed_line['firstRequestLine'], $matches) !== 1) {
 		continue; // Skip requests that are not for updates.
@@ -67,13 +72,6 @@ while (($line = fgets($log_handle)) !== false) {
 	if (strlen($agent['site']) !== 40 || $agent['ver'] === '') {
 		continue;
 	}
-
-	/*
-	// Test a single IP.
-	if($parsed_line['remoteHostname']!=='91.238.164.172') {
-		continue;
-	}
-	*/
 
 	$data[$agent['site']] = [
 		'version'      => $agent['ver'],
