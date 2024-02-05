@@ -19,6 +19,5 @@ cat "/var/log/apache2/api_access.log" >&3;
 # Gzip logs
 date=$(date '+%Y-%m-%d')
 cat <&4 | ./stat.php --fields=version,fullversion,shortphp,multisite,locale - >"statistics_${date}.txt"
-cat <&4 | ./stat.php --only-total - >"count_${date}.txt"
 
 exec 3>&-
