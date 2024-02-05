@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# cd to current script directory
+cd "$(dirname "$0")"
+
 # Create temp file
 tmpfile=$(mktemp /tmp/merge.XXXXXX)
 exec 3>"$tmpfile"
