@@ -6,4 +6,5 @@ api_access*
 /*.log
 /*.gz
 /merged*
+/statistics_*
 
