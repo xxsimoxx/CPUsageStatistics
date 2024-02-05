@@ -7,6 +7,12 @@ if (PHP_SAPI !== 'cli' || isset($_SERVER['HTTP_USER_AGENT'])) {
 
 require_once 'vendor/autoload.php';
 
+if (!function_exists('mb_strlen')) {
+	function mb_strlen($str) {
+		return strlen($str);
+	}
+}
+
 use BenMorel\ApacheLogParser\Parser;
 use dekor\ArrayToTextTable;
 
