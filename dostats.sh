@@ -20,4 +20,9 @@ cat "/var/log/apache2/api_access.log" >&3;
 date=$(date '+%Y-%m-%d')
 cat <&4 | ./stat.php --fields=version,fullversion,shortphp,multisite,locale - >"statistics_${date}.txt"
 
+# Add row to global file.
+echo -ne `date +'%y/%m/%d'`"\t" >>"statistics_global.txt"
+cat "statistics_${date}.txt" | grep -E 'total|ja' | tr -dc '0-9\n' | tr "\n" "\t" >>"statistics_global.txt"
+echo >>"statistics_global.txt"
+
 exec 3>&-
