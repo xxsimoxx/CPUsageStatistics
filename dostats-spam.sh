@@ -18,6 +18,6 @@ cat "/var/log/apache2/api_access.log" >&3;
 
 # Gzip logs
 date=$(date '+%Y-%m-%d')
-cat <&4 | ./stat.php --fields=fullversion,php,locale,ip - >"spam-statistics_${date}.txt"
+cat <&4 | ./stat-spam.php --fields=fullversion,php,locale,ip - >"spam-statistics_${date}.txt"
 
 exec 3>&-
